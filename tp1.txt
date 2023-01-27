@@ -1,0 +1,84 @@
+Nom de projet : maisonneuve2295282
+
+Les lignes de commande pour:
+
+Étape1 : Création un nouveau projet Laravel
+        composer create-project --prefer-dist laravel/laravel maisonneuve2295282 "8.*"
+        (changement le fichiere .env)
+
+Étape2 :Création les modèles 
+               
+        php artisan make:model Ville
+            protected $fillable = [
+        'nom'
+    ];
+        ---------------------------------------------------
+        php artisan make:model Etudient
+        protected $fillable = [
+        'nom',
+        'adresse',
+        'phone',
+        'email',
+        'date_de_naissance',
+        'villeId'
+    ];
+
+Étape3 : 
+                php artisan make:migration create_posts_table
+        php artisan make:migration create_villes_table
+        $table->string('nom',20);
+        -----------------------------------------------------------
+        php artisan make:migration create_etudients_table
+        Schema::create('etudients', function (Blueprint $table) {
+            $table->id();
+            $table->string('nom',100);
+            $table->string('adresse',100);
+            $table->string('phone',20);
+            $table->string('email',50);
+            $table->string('date_de_naissance',8);
+            $table->integer('villeId')->unsigned();
+            $table->foreign('villeId')->references('id')->on('villes');
+            $table->timestamps();
+        });
+        php artisan serve
+        php artisan migrate
+                use Illuminate\Support\Facades\Schema;
+                Schema::defaultStringLength(191);
+
+        4:
+                php artisan make:factory PostFactory
+        php artisan make:factory VilleFactory
+                VilleFactory.php
+                        use App\Models\Ville;
+                        use App\Models\Etudient;
+                        'nom' => $this->faker->name()
+
+        php artisan make:factory EtudientFactory
+        use App\Models\Ville;
+        use App\Models\Etudient;
+            public function definition()
+    {
+        return [
+            'nom' => $this->faker->name(),
+            'adresse' => $this->faker->address(),
+            'phone' => $this->faker->phoneNumber(),
+            'email'  => $this->faker->unique()->safeEmail(),
+            'date_de_naissance' => $this->faker->dateTimeBetween('-60 year', '-18 year'),
+            'villeId' => $this->faker->unique()->numberBetween(1, 100)
+        ];
+    }
+
+
+        php artisan tinker
+                \App\Models\Ville::factory()->times(15)->create()
+                \App\Models\Etudient::factory()->times(100)->create()
+        
+Étap 6: 
+        php artisan make:controller VilleController -m Ville
+        php artisan make:controller EtudientController -m Etudient
+
+Étape 7: 
+        On mit les deux dossier de bootstrap dans «public»
+        On crée les dossiers «layouts» et «blog» dans resources\view
+        on crée le fichier «app.blade.php» dans le dossier layout en mettant HTML de base
+        on extende layouts dans la page accueil (welcome.blade.php)
